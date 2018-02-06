@@ -141,8 +141,9 @@ namespace EnigmaStimulator
             MD5.Text = enigma.md5;
         }
 
-        private void decrypt_btn_Click(object sender, EventArgs e)
+        private async void decrypt_btn_Click(object sender, EventArgs e)
         {
+            bool success = false;
             //MessageBox.Show("这可能将花费一定时间（视信息完整程度而定），请耐心等待");
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -153,31 +154,38 @@ namespace EnigmaStimulator
             string plain_text = PlainText.Text;
             string cypher_text = CypherText.Text;
             string md5 = MD5.Text;
-            string decrypted;//解密后的
+            string decrypted = string.Empty;//解密后的
             Enigma enigma = new Enigma(plugboard, rotor_num, ring_setting, message_key, plain_text, cypher_text, md5);
+            decrypt_btn.Text = "Decrypting...";
 
-            try
+            await Task.Run(() =>
             {
-                decrypted = enigma.Decrpyt();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("解密失败。原因：" + ex.Message);
+                try
+                {
+                    decrypted = enigma.Decrpyt();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("解密失败。原因：" + ex.Message);
+                    return;
+                }
+            });
+            if (!success) //失败则不显示
                 return;
-            }
-
             //显示破译数据
+            decrypt_btn.Text = "Decrypt";
             PlainText.ForeColor = Color.DarkBlue;
             PlainText.Text = decrypted;
-            if (Rotor1.Text == string.Empty) { Rotor1.ForeColor = Color.DarkBlue; Rotor1.Text = enigma.rotor_num[0].ToString(); }
-            if (Rotor2.Text == string.Empty) { Rotor2.ForeColor = Color.DarkBlue; Rotor2.Text = enigma.rotor_num[1].ToString(); }
-            if (Rotor3.Text == string.Empty) { Rotor3.ForeColor = Color.DarkBlue; Rotor3.Text = enigma.rotor_num[2].ToString(); }
-            if (RS1.Text == string.Empty) { RS1.ForeColor = Color.DarkBlue; RS1.Text = enigma.ring_setting[0].ToString(); }
-            if (RS2.Text == string.Empty) { RS2.ForeColor = Color.DarkBlue; RS2.Text = enigma.ring_setting[1].ToString(); }
-            if (RS3.Text == string.Empty) { RS3.ForeColor = Color.DarkBlue; RS3.Text = enigma.ring_setting[2].ToString(); }
-            if (MK1.Text == string.Empty) { MK1.ForeColor = Color.DarkBlue; MK1.Text = enigma.message_key[0].ToString(); }
-            if (MK2.Text == string.Empty) { MK2.ForeColor = Color.DarkBlue; MK2.Text = enigma.message_key[1].ToString(); }
-            if (MK3.Text == string.Empty) { MK3.ForeColor = Color.DarkBlue; MK3.Text = enigma.message_key[2].ToString(); }
+            if (Rotor1.Text == string.Empty || Rotor1.Text != enigma.rotor_num[0].ToString()) { Rotor1.ForeColor = Color.DarkBlue; Rotor1.Text = enigma.rotor_num[0].ToString(); }
+            if (Rotor2.Text == string.Empty || Rotor2.Text != enigma.rotor_num[1].ToString()) { Rotor2.ForeColor = Color.DarkBlue; Rotor2.Text = enigma.rotor_num[1].ToString(); }
+            if (Rotor3.Text == string.Empty || Rotor3.Text != enigma.rotor_num[2].ToString()) { Rotor3.ForeColor = Color.DarkBlue; Rotor3.Text = enigma.rotor_num[2].ToString(); }
+            if (RS1.Text == string.Empty || RS1.Text != enigma.ring_setting[0].ToString()) { RS1.ForeColor = Color.DarkBlue; RS1.Text = enigma.ring_setting[0].ToString(); }
+            if (RS2.Text == string.Empty || RS2.Text != enigma.ring_setting[1].ToString()) { RS2.ForeColor = Color.DarkBlue; RS2.Text = enigma.ring_setting[1].ToString(); }
+            if (RS3.Text == string.Empty || RS3.Text != enigma.ring_setting[2].ToString()) { RS3.ForeColor = Color.DarkBlue; RS3.Text = enigma.ring_setting[2].ToString(); }
+            if (MK1.Text == string.Empty || MK1.Text != enigma.message_key[0].ToString()) { MK1.ForeColor = Color.DarkBlue; MK1.Text = enigma.message_key[0].ToString(); }
+            if (MK2.Text == string.Empty || MK2.Text != enigma.message_key[1].ToString()) { MK2.ForeColor = Color.DarkBlue; MK2.Text = enigma.message_key[1].ToString(); }
+            if (MK3.Text == string.Empty || MK3.Text != enigma.message_key[2].ToString()) { MK3.ForeColor = Color.DarkBlue; MK3.Text = enigma.message_key[2].ToString(); }
 
             stopwatch.Stop();
             MessageBox.Show("破解成功，运行时间：" + stopwatch.ElapsedMilliseconds / 1000.0 + "秒");
@@ -229,7 +237,7 @@ namespace EnigmaStimulator
             else
                 e.Handled = true; //中止这次输入
 
-            if (textBox.Text.Length == 1)
+            if (textBox.Text.Length >= 1)
                 SendKeys.Send("{tab}");
         }
 
@@ -244,7 +252,7 @@ namespace EnigmaStimulator
 
             if (e.KeyChar < '0' || e.KeyChar > '5') //舍弃不合法输入
                 e.Handled = true;
-            if (textBox.Text.Length == 0) //自动跳进
+            if (textBox.Text.Length >= 0) //自动跳进
                 SendKeys.Send("{tab}");
         }
 
@@ -273,7 +281,7 @@ namespace EnigmaStimulator
             }
             else
                 e.Handled = true;
-            if (textBox.Text.Length == 0) //自动跳进
+            if (textBox.Text.Length >= 0) //自动跳进
                 SendKeys.Send("{tab}");
         }
 
@@ -343,6 +351,16 @@ namespace EnigmaStimulator
         {
             TextBox textBox = (TextBox)sender;
             textBox.SelectAll();
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

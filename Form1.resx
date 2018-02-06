@@ -117,4 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Notice:
+①The three blanks are associated with the three
+rotors. The first is associated with the left rotor.
+②To decrypt, leave the unknown blanks blank.
+③The calculation time can be very large when 
+the number of unknown position is more than 6.</value>
+  </data>
 </root>
