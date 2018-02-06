@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnigmaStimulator", "EnigmaStimulator.csproj", "{D6B3BF74-9C20-4A76-B5B1-762D72FCD994}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6B3BF74-9C20-4A76-B5B1-762D72FCD994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6B3BF74-9C20-4A76-B5B1-762D72FCD994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6B3BF74-9C20-4A76-B5B1-762D72FCD994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6B3BF74-9C20-4A76-B5B1-762D72FCD994}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9FD9987F-2219-410D-AA62-30D054D335DB}
+	EndGlobalSection
+EndGlobal
