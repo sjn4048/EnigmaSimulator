@@ -279,7 +279,7 @@ namespace EnigmaStimulator
                 return;
             } 
 
-            if (textBox.Text.Length >= 1)
+            if (textBox.Text.Length - textBox.SelectedText.Length >= 1)
                 SendKeys.Send("{tab}");
         }
 
@@ -329,7 +329,7 @@ namespace EnigmaStimulator
                 e.Handled = true;
                 return;
             }
-            if (textBox.Text.Length >= 1) //自动跳进
+            if (textBox.Text.Length >= 0) //自动跳进
                 SendKeys.Send("{tab}");
         }
 
