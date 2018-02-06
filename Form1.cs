@@ -273,8 +273,11 @@ namespace EnigmaStimulator
             {
                 e.KeyChar = (char)(e.KeyChar - 32);
             }
-            else
-                e.Handled = true; //中止这次输入
+            else//中止这次输入
+            {
+                e.Handled = true;
+                return;
+            } 
 
             if (textBox.Text.Length >= 1)
                 SendKeys.Send("{tab}");
@@ -290,7 +293,10 @@ namespace EnigmaStimulator
                 e.Handled = true;
 
             if (e.KeyChar < '0' || e.KeyChar > '5') //舍弃不合法输入
+            {
                 e.Handled = true;
+                return;
+            }
             if (textBox.Text.Length >= 0) //自动跳进
                 SendKeys.Send("{tab}");
         }
@@ -319,8 +325,11 @@ namespace EnigmaStimulator
                 e.KeyChar = (char)(e.KeyChar - 32);
             }
             else
+            {
                 e.Handled = true;
-            if (textBox.Text.Length >= 0) //自动跳进
+                return;
+            }
+            if (textBox.Text.Length >= 1) //自动跳进
                 SendKeys.Send("{tab}");
         }
 
@@ -346,7 +355,10 @@ namespace EnigmaStimulator
                 e.KeyChar = (char)(e.KeyChar - 32);
             }
             else
+            {
                 e.Handled = true;
+                return;
+            }
         }
 
         private void MD5_KeyPress(object sender, KeyPressEventArgs e)
@@ -362,7 +374,10 @@ namespace EnigmaStimulator
                 e.KeyChar = (char)(e.KeyChar - 32);
             }
             else
+            {
                 e.Handled = true;
+                return;
+            }
         }
 
         private void Text_Leave(object sender, EventArgs e)
