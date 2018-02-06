@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace EnigmaStimulator
 {
@@ -49,6 +50,7 @@ namespace EnigmaStimulator
 
             return plugboard;
         } //根据winform输入，获取plugboard
+
         private int?[] Get_Rotor()
         {
             int?[] rotor = new int?[3];
@@ -121,23 +123,68 @@ namespace EnigmaStimulator
             string plain_text = PlainText.Text;
             string cypher_text = CypherText.Text;
             string md5 = MD5.Text;
+            string cyphered;//加密后的
 
             Enigma enigma = new Enigma(plugboard, rotor_num, ring_setting, message_key, plain_text, cypher_text, md5);
-            string cyphered = enigma.Encrypt();
+            try
+            {
+                cyphered = enigma.Encrypt();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
             CypherText.ForeColor = Color.DarkBlue;
             CypherText.Text = cyphered;
             MD5.ForeColor = Color.DarkBlue;
             MD5.Text = enigma.md5;
-            //Enigma enigma = new Enigma()
         }
 
         private void decrypt_btn_Click(object sender, EventArgs e)
         {
+            //MessageBox.Show("这可能将花费一定时间（视信息完整程度而定），请耐心等待");
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var plugboard = Get_Plugboard();
+            var rotor_num = Get_Rotor();
+            var ring_setting = Get_Ring_Setting();
+            var message_key = Get_Message_Key();
+            string plain_text = PlainText.Text;
+            string cypher_text = CypherText.Text;
+            string md5 = MD5.Text;
+            string decrypted;//解密后的
+            Enigma enigma = new Enigma(plugboard, rotor_num, ring_setting, message_key, plain_text, cypher_text, md5);
 
+            try
+            {
+                decrypted = enigma.Decrpyt();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("解密失败。原因：" + ex.Message);
+                return;
+            }
+
+            //显示破译数据
+            PlainText.ForeColor = Color.DarkBlue;
+            PlainText.Text = decrypted;
+            if (Rotor1.Text == string.Empty) { Rotor1.ForeColor = Color.DarkBlue; Rotor1.Text = enigma.rotor_num[0].ToString(); }
+            if (Rotor2.Text == string.Empty) { Rotor2.ForeColor = Color.DarkBlue; Rotor2.Text = enigma.rotor_num[1].ToString(); }
+            if (Rotor3.Text == string.Empty) { Rotor3.ForeColor = Color.DarkBlue; Rotor3.Text = enigma.rotor_num[2].ToString(); }
+            if (RS1.Text == string.Empty) { RS1.ForeColor = Color.DarkBlue; RS1.Text = enigma.ring_setting[0].ToString(); }
+            if (RS2.Text == string.Empty) { RS2.ForeColor = Color.DarkBlue; RS2.Text = enigma.ring_setting[1].ToString(); }
+            if (RS3.Text == string.Empty) { RS3.ForeColor = Color.DarkBlue; RS3.Text = enigma.ring_setting[2].ToString(); }
+            if (MK1.Text == string.Empty) { MK1.ForeColor = Color.DarkBlue; MK1.Text = enigma.message_key[0].ToString(); }
+            if (MK2.Text == string.Empty) { MK2.ForeColor = Color.DarkBlue; MK2.Text = enigma.message_key[1].ToString(); }
+            if (MK3.Text == string.Empty) { MK3.ForeColor = Color.DarkBlue; MK3.Text = enigma.message_key[2].ToString(); }
+
+            stopwatch.Stop();
+            MessageBox.Show("破解成功，运行时间：" + stopwatch.ElapsedMilliseconds / 1000.0 + "秒");
         }
 
         /// <summary>
-        /// 以下为UI部分的函数
+        /// 以下为UI函数
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -258,7 +305,7 @@ namespace EnigmaStimulator
         private void MD5_KeyPress(object sender, KeyPressEventArgs e)
         {
             TextBox textBox = (TextBox)sender;
-            if (e.KeyChar == '\b') //如果输入的是退格键，则放行
+            if (e.KeyChar == '\b' || (Control.ModifierKeys & Keys.Control) == Keys.Control) //如果输入的是退格或Ctrl键，则放行
                 return;
 
             if (e.KeyChar >= 'A' && e.KeyChar <= 'Z' || char.IsNumber(e.KeyChar)) //自动将小写转换为大写、并舍弃非字母、非数字

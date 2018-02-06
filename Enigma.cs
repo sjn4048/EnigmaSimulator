@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace EnigmaStimulator
 {
@@ -17,15 +18,18 @@ namespace EnigmaStimulator
 
         //输入/输出变量
         string plugboard;
-        int?[] rotor_num = new int?[3] { null, null, null }; //采用nullable，为了适应需要暴力破解的情况
-        char?[] ring_setting;
-        char?[] message_key;
-        public string md5;
+        public int?[] rotor_num { get; private set; } //采用nullable，为了适应需要暴力破解的情况，下同
+        public char?[] ring_setting { get; private set; }
+        public char?[] message_key { get; private set; }
+        string input_md5;
+        char?[] input_message_key;
+        public string md5 { get; private set; }
         string plain_text;
         string cypher_text;
 
         public Enigma(char[] plugboard, int?[] rotor_num, char?[] ring_setting, char?[] message_key, string plain_text = "", string cypher_text = "", string md5 = "")
         {
+            input_message_key = new char?[] { null, null, null };
             if (plugboard.Length != 26) //检验plugboard输入是否合法
                 throw new FormatException("Plugboard输入不合法");
             for (int i = 0; i < 26; i++)
@@ -34,7 +38,7 @@ namespace EnigmaStimulator
                     throw new FormatException("Plugboard输入不合法");
             }
             this.plugboard = new string(plugboard); //给plugboard赋值
-            
+
             if (rotor_num.Length != 3) //检验rotor_num输入是否合法
                 throw new FormatException("Rotor输入不合法");
             for (int i = 0; i < 3; i++)
@@ -44,11 +48,11 @@ namespace EnigmaStimulator
             }
             this.rotor_num = rotor_num;
 
-            if(ring_setting.Length != 3)
+            if (ring_setting.Length != 3)
                 throw new FormatException("Ring Setting输入不合法");
             foreach (char? rs in ring_setting)
             {
-                 if (rs != null && !char.IsLetter((char)rs))
+                if (rs != null && !char.IsLetter((char)rs))
                     throw new FormatException("Ring Setting输入不合法");
             }
             this.ring_setting = ring_setting;
@@ -61,8 +65,10 @@ namespace EnigmaStimulator
                     throw new FormatException("Message Key输入不合法");
             }
             this.message_key = message_key;
+            Array.Copy(message_key, input_message_key, 3);
 
-            foreach(char ch in plain_text)
+            plain_text = plain_text.Trim();
+            foreach (char ch in plain_text)
                 if (!char.IsLetter(ch)) throw new FormatException("明文输入不合法");
             this.plain_text = plain_text;
 
@@ -72,7 +78,7 @@ namespace EnigmaStimulator
 
             foreach (char ch in md5)
                 if (!char.IsLetterOrDigit(ch)) throw new FormatException("MD5输入不合法");
-            this.md5 = md5;
+            this.md5 = this.input_md5 = md5;
         }
 
         public string Encrypt()
@@ -95,12 +101,24 @@ namespace EnigmaStimulator
                 sb.Append(result);
             }
             cypher_text = sb.ToString();
+            Array.Copy(input_message_key, message_key, 3); //调回message_key, 防止decrypt时候变来变去
             return cypher_text;
         }
 
         public string Decrpyt()
         {
-
+            if (cypher_text == "")
+                throw new ArithmeticException("没有输入密文！");
+            if (md5 == "")
+                throw new ArithmeticException("没有输入MD5！");
+            plain_text = cypher_text;
+            input_md5 = md5;
+            if (Recursive_Decrypt(rotor_num, ring_setting, input_message_key, 0))
+            {
+                return cypher_text;
+            }
+            else
+                throw new ArithmeticException("无解");
         }
 
         /// <summary>
@@ -109,12 +127,80 @@ namespace EnigmaStimulator
         /// <param name="input"></param>
         /// <returns></returns>
 
+        private bool Recursive_Decrypt(int?[] rotor_guess, char?[] ring_setting_guess, char?[] message_key_guess, int count) //count为“从前往后数最后一个确定的位数”
+        {
+            //对Rotor
+            for (int i = 0; i < 3; i++)
+            {
+                if (rotor_guess[i] != null)
+                    count++;
+                else
+                {
+                    for (int j = 1; j <= 5; j++)
+                    {
+                        rotor_guess[i] = j;
+                        if (Recursive_Decrypt(rotor_guess, ring_setting_guess, message_key_guess, 0))
+                            return true;
+                    }
+                    rotor_guess[i] = null;
+                    return false;
+                }
+            }
+            //对Ring_Setting
+            for (int i = 0; i < 3; i++)
+            {
+                if (ring_setting_guess[i] != null)
+                    count++;
+                else
+                {
+                    for (char j = 'A'; j <= 'Z'; j = (char)(j + 1))
+                    {
+                        ring_setting_guess[i] = j;
+                        if (Recursive_Decrypt(rotor_guess, ring_setting_guess, message_key_guess, 0))
+                            return true;
+                    }
+                    ring_setting_guess[i] = null;
+                    return false;
+                }
+            }
+            //对Message_Key
+            for (int i = 0; i < 3; i++)
+            {
+                if (message_key_guess[i] != null)
+                    count++;
+                else
+                {
+                    for (char j = 'A'; j <= 'Z'; j = (char)(j + 1))
+                    {
+                        message_key_guess[i] = j;
+                        if (Recursive_Decrypt(rotor_guess, ring_setting_guess, message_key_guess, 0))
+                            return true;
+                    }
+                    message_key_guess[i] = null;
+                    return false;
+                }
+            }
+            if (count == 9) //所有参数均已知（或猜到已知）
+            {
+                Array.Copy(rotor_guess, rotor_num, 3);
+                Array.Copy(message_key_guess, message_key, 3);
+                Array.Copy(ring_setting_guess, ring_setting, 3);
+                if (Calculate_MD5(Encrypt()) == input_md5)
+                {
+                    return true;
+                }
+                else
+                    return false;
+            }
+            return false;
+        }
+
         private string Calculate_MD5(string input) //计算MD5
         {
             MD5 md5 = System.Security.Cryptography.MD5.Create();
             byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
             byte[] hash = md5.ComputeHash(inputBytes);
-         
+
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < hash.Length; i++)
             {
