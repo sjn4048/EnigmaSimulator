@@ -53,11 +53,11 @@
             this.Rotor3 = new System.Windows.Forms.TextBox();
             this.Rotor2 = new System.Windows.Forms.TextBox();
             this.Rotor1 = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.RingSetting = new System.Windows.Forms.GroupBox();
             this.RS3 = new System.Windows.Forms.TextBox();
             this.RS2 = new System.Windows.Forms.TextBox();
             this.RS1 = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.MessageKey = new System.Windows.Forms.GroupBox();
             this.MK3 = new System.Windows.Forms.TextBox();
             this.MK2 = new System.Windows.Forms.TextBox();
             this.MK1 = new System.Windows.Forms.TextBox();
@@ -75,8 +75,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.Plgbd.SuspendLayout();
             this.Rotor.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.RingSetting.SuspendLayout();
+            this.MessageKey.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -396,16 +396,16 @@
             this.Rotor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Rotor_KeyPress);
             this.Rotor1.Leave += new System.EventHandler(this.Rotor_Leave);
             // 
-            // groupBox1
+            // RingSetting
             // 
-            this.groupBox1.Controls.Add(this.RS3);
-            this.groupBox1.Controls.Add(this.RS2);
-            this.groupBox1.Controls.Add(this.RS1);
-            this.groupBox1.Location = new System.Drawing.Point(195, 154);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(175, 71);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
+            this.RingSetting.Controls.Add(this.RS3);
+            this.RingSetting.Controls.Add(this.RS2);
+            this.RingSetting.Controls.Add(this.RS1);
+            this.RingSetting.Location = new System.Drawing.Point(195, 154);
+            this.RingSetting.Name = "RingSetting";
+            this.RingSetting.Size = new System.Drawing.Size(175, 71);
+            this.RingSetting.TabIndex = 2;
+            this.RingSetting.TabStop = false;
             // 
             // RS3
             // 
@@ -449,16 +449,16 @@
             this.RS1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MKRS_KeyPress);
             this.RS1.Leave += new System.EventHandler(this.MKRS_Leave);
             // 
-            // groupBox2
+            // MessageKey
             // 
-            this.groupBox2.Controls.Add(this.MK3);
-            this.groupBox2.Controls.Add(this.MK2);
-            this.groupBox2.Controls.Add(this.MK1);
-            this.groupBox2.Location = new System.Drawing.Point(195, 225);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(175, 71);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
+            this.MessageKey.Controls.Add(this.MK3);
+            this.MessageKey.Controls.Add(this.MK2);
+            this.MessageKey.Controls.Add(this.MK1);
+            this.MessageKey.Location = new System.Drawing.Point(195, 225);
+            this.MessageKey.Name = "MessageKey";
+            this.MessageKey.Size = new System.Drawing.Size(175, 71);
+            this.MessageKey.TabIndex = 3;
+            this.MessageKey.TabStop = false;
             // 
             // MK3
             // 
@@ -642,8 +642,8 @@
             this.Controls.Add(this.PlainText);
             this.Controls.Add(this.CypherText);
             this.Controls.Add(this.MD5);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.MessageKey);
+            this.Controls.Add(this.RingSetting);
             this.Controls.Add(this.Rotor);
             this.Controls.Add(this.Plgbd);
             this.Controls.Add(this.label7);
@@ -663,10 +663,10 @@
             this.Plgbd.PerformLayout();
             this.Rotor.ResumeLayout(false);
             this.Rotor.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.RingSetting.ResumeLayout(false);
+            this.RingSetting.PerformLayout();
+            this.MessageKey.ResumeLayout(false);
+            this.MessageKey.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -699,11 +699,11 @@
         private System.Windows.Forms.TextBox Rotor3;
         private System.Windows.Forms.TextBox Rotor2;
         private System.Windows.Forms.TextBox Rotor1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox RingSetting;
         private System.Windows.Forms.TextBox RS3;
         private System.Windows.Forms.TextBox RS2;
         private System.Windows.Forms.TextBox RS1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox MessageKey;
         private System.Windows.Forms.TextBox MK3;
         private System.Windows.Forms.TextBox MK2;
         private System.Windows.Forms.TextBox MK1;

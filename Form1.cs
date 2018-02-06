@@ -13,6 +13,8 @@ namespace EnigmaStimulator
 {
     public partial class Form1 : Form
     {
+        bool Is_Decrypting;
+
         public Form1()
         {
             InitializeComponent();
@@ -143,52 +145,89 @@ namespace EnigmaStimulator
 
         private async void decrypt_btn_Click(object sender, EventArgs e)
         {
-            bool success = false;
-            //MessageBox.Show("这可能将花费一定时间（视信息完整程度而定），请耐心等待");
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var plugboard = Get_Plugboard();
-            var rotor_num = Get_Rotor();
-            var ring_setting = Get_Ring_Setting();
-            var message_key = Get_Message_Key();
-            string plain_text = PlainText.Text;
-            string cypher_text = CypherText.Text;
-            string md5 = MD5.Text;
+            if (Is_Decrypting)
+                return;
+
+            Is_Decrypting = true;
+
             string decrypted = string.Empty;//解密后的
-            Enigma enigma = new Enigma(plugboard, rotor_num, ring_setting, message_key, plain_text, cypher_text, md5);
+            int count = 0; //缺失的信息的个数
+            foreach (TextBox textBox in Rotor.Controls)
+                if (textBox.Text == string.Empty)
+                    count++;
+            foreach (TextBox textBox in RingSetting.Controls)
+                if (textBox.Text == string.Empty)
+                    count++;
+            foreach (TextBox textBox in MessageKey.Controls)
+                if (textBox.Text == string.Empty)
+                    count++;
+            if (count == 6 && MessageBox.Show(icon: MessageBoxIcon.Warning, buttons: MessageBoxButtons.OKCancel, caption: "Warning", text: "This might take some time, continue?") == DialogResult.Cancel)
+                return;
+            if (count == 7 && MessageBox.Show(icon: MessageBoxIcon.Warning, buttons: MessageBoxButtons.OKCancel, caption:"Warning", text: "This might take a LONG time, continue?") == DialogResult.Cancel)
+                return;
+            if (count > 7 && MessageBox.Show(icon: MessageBoxIcon.Warning, buttons: MessageBoxButtons.OKCancel, caption: "Warning", text: "This might take VERY LONG time, continue?") == DialogResult.Cancel)
+                return;
+
+                //开始在UI线程上做相关的准备，比如更改button名字、Unable各种东西
+            foreach (TextBox textBox in Plgbd.Controls)
+                textBox.ReadOnly = true;
+            foreach (TextBox textBox in Rotor.Controls)
+                textBox.ReadOnly = true;
+            foreach (TextBox textBox in RingSetting.Controls)
+                textBox.ReadOnly = true;
+            foreach (TextBox textBox in MessageKey.Controls)
+                textBox.ReadOnly = true;
+            CypherText.ReadOnly = MD5.ReadOnly = true;
             decrypt_btn.Text = "Decrypting...";
 
             await Task.Run(() =>
             {
                 try
                 {
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    var plugboard = Get_Plugboard();
+                    var rotor_num = Get_Rotor();
+                    var ring_setting = Get_Ring_Setting();
+                    var message_key = Get_Message_Key();
+                    string plain_text = PlainText.Text;
+                    string cypher_text = CypherText.Text;
+                    string md5 = MD5.Text;
+                    Enigma enigma = new Enigma(plugboard, rotor_num, ring_setting, message_key, plain_text, cypher_text, md5);
                     decrypted = enigma.Decrpyt();
-                    success = true;
+                    //显示破译数据
+                    if (Rotor1.Text == string.Empty || Rotor1.Text != enigma.rotor_num[0].ToString()) { Rotor1.ForeColor = Color.DarkBlue; Rotor1.Text = enigma.rotor_num[0].ToString(); }
+                    if (Rotor2.Text == string.Empty || Rotor2.Text != enigma.rotor_num[1].ToString()) { Rotor2.ForeColor = Color.DarkBlue; Rotor2.Text = enigma.rotor_num[1].ToString(); }
+                    if (Rotor3.Text == string.Empty || Rotor3.Text != enigma.rotor_num[2].ToString()) { Rotor3.ForeColor = Color.DarkBlue; Rotor3.Text = enigma.rotor_num[2].ToString(); }
+                    if (RS1.Text == string.Empty || RS1.Text != enigma.ring_setting[0].ToString()) { RS1.ForeColor = Color.DarkBlue; RS1.Text = enigma.ring_setting[0].ToString(); }
+                    if (RS2.Text == string.Empty || RS2.Text != enigma.ring_setting[1].ToString()) { RS2.ForeColor = Color.DarkBlue; RS2.Text = enigma.ring_setting[1].ToString(); }
+                    if (RS3.Text == string.Empty || RS3.Text != enigma.ring_setting[2].ToString()) { RS3.ForeColor = Color.DarkBlue; RS3.Text = enigma.ring_setting[2].ToString(); }
+                    if (MK1.Text == string.Empty || MK1.Text != enigma.message_key[0].ToString()) { MK1.ForeColor = Color.DarkBlue; MK1.Text = enigma.message_key[0].ToString(); }
+                    if (MK2.Text == string.Empty || MK2.Text != enigma.message_key[1].ToString()) { MK2.ForeColor = Color.DarkBlue; MK2.Text = enigma.message_key[1].ToString(); }
+                    if (MK3.Text == string.Empty || MK3.Text != enigma.message_key[2].ToString()) { MK3.ForeColor = Color.DarkBlue; MK3.Text = enigma.message_key[2].ToString(); }
+
+                    stopwatch.Stop();
+                    MessageBox.Show("破解成功，运行时间：" + stopwatch.ElapsedMilliseconds / 1000.0 + "秒");
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("解密失败。原因：" + ex.Message);
-                    return;
                 }
             });
-            if (!success) //失败则不显示
-                return;
-            //显示破译数据
+            Is_Decrypting = false;
+            //复苏被冻结的Textbox
             decrypt_btn.Text = "Decrypt";
+            foreach (TextBox textBox in Plgbd.Controls)
+                textBox.ReadOnly = false;
+            foreach (TextBox textBox in Rotor.Controls)
+                textBox.ReadOnly = false;
+            foreach (TextBox textBox in RingSetting.Controls)
+                textBox.ReadOnly = false;
+            foreach (TextBox textBox in MessageKey.Controls)
+                textBox.ReadOnly = false;
+            CypherText.ReadOnly = MD5.ReadOnly = false;
             PlainText.ForeColor = Color.DarkBlue;
             PlainText.Text = decrypted;
-            if (Rotor1.Text == string.Empty || Rotor1.Text != enigma.rotor_num[0].ToString()) { Rotor1.ForeColor = Color.DarkBlue; Rotor1.Text = enigma.rotor_num[0].ToString(); }
-            if (Rotor2.Text == string.Empty || Rotor2.Text != enigma.rotor_num[1].ToString()) { Rotor2.ForeColor = Color.DarkBlue; Rotor2.Text = enigma.rotor_num[1].ToString(); }
-            if (Rotor3.Text == string.Empty || Rotor3.Text != enigma.rotor_num[2].ToString()) { Rotor3.ForeColor = Color.DarkBlue; Rotor3.Text = enigma.rotor_num[2].ToString(); }
-            if (RS1.Text == string.Empty || RS1.Text != enigma.ring_setting[0].ToString()) { RS1.ForeColor = Color.DarkBlue; RS1.Text = enigma.ring_setting[0].ToString(); }
-            if (RS2.Text == string.Empty || RS2.Text != enigma.ring_setting[1].ToString()) { RS2.ForeColor = Color.DarkBlue; RS2.Text = enigma.ring_setting[1].ToString(); }
-            if (RS3.Text == string.Empty || RS3.Text != enigma.ring_setting[2].ToString()) { RS3.ForeColor = Color.DarkBlue; RS3.Text = enigma.ring_setting[2].ToString(); }
-            if (MK1.Text == string.Empty || MK1.Text != enigma.message_key[0].ToString()) { MK1.ForeColor = Color.DarkBlue; MK1.Text = enigma.message_key[0].ToString(); }
-            if (MK2.Text == string.Empty || MK2.Text != enigma.message_key[1].ToString()) { MK2.ForeColor = Color.DarkBlue; MK2.Text = enigma.message_key[1].ToString(); }
-            if (MK3.Text == string.Empty || MK3.Text != enigma.message_key[2].ToString()) { MK3.ForeColor = Color.DarkBlue; MK3.Text = enigma.message_key[2].ToString(); }
-
-            stopwatch.Stop();
-            MessageBox.Show("破解成功，运行时间：" + stopwatch.ElapsedMilliseconds / 1000.0 + "秒");
         }
 
         /// <summary>
