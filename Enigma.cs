@@ -31,53 +31,53 @@ namespace EnigmaStimulator
         {
             input_message_key = new char?[] { null, null, null };
             if (plugboard.Length != 26) //检验plugboard输入是否合法
-                throw new FormatException("Plugboard输入不合法");
+                throw new FormatException("Illegal Plugboard");
             for (int i = 0; i < 26; i++)
             {
                 if (plugboard[i] != 'A' + i && plugboard[plugboard[i] - 'A'] != 'A' + i)
-                    throw new FormatException("Plugboard输入不合法");
+                    throw new FormatException("Illegal Plugboard");
             }
             this.plugboard = new string(plugboard); //给plugboard赋值
 
             if (rotor_num.Length != 3) //检验rotor_num输入是否合法
-                throw new FormatException("Rotor输入不合法");
+                throw new FormatException("Illegal Rotor");
             for (int i = 0; i < 3; i++)
             {
                 if (rotor_num[i] > 5 || rotor_num[i] < 0)
-                    throw new FormatException("Rotor输入不合法");
+                    throw new FormatException("Illegal Rotor");
             }
             this.rotor_num = rotor_num;
 
             if (ring_setting.Length != 3)
-                throw new FormatException("Ring Setting输入不合法");
+                throw new FormatException("Illegal Ring Setting");
             foreach (char? rs in ring_setting)
             {
                 if (rs != null && !char.IsLetter((char)rs))
-                    throw new FormatException("Ring Setting输入不合法");
+                    throw new FormatException("Illegal Ring Setting");
             }
             this.ring_setting = ring_setting;
 
             if (message_key.Length != 3)
-                throw new FormatException("Message Key输入不合法");
+                throw new FormatException("Illegal Message Key");
             foreach (char? mk in message_key)
             {
                 if (mk != null && !char.IsLetter((char)mk))
-                    throw new FormatException("Message Key输入不合法");
+                    throw new FormatException("Illegal Message Key");
             }
             this.message_key = message_key;
             Array.Copy(message_key, input_message_key, 3);
 
             plain_text = plain_text.Trim();
             foreach (char ch in plain_text)
-                if (!char.IsLetter(ch)) throw new FormatException("明文输入不合法");
+                if (!char.IsLetter(ch)) throw new FormatException("Illegal Plain Text");
             this.plain_text = plain_text;
 
             foreach (char ch in cypher_text)
-                if (!char.IsLetter(ch)) throw new FormatException("密文输入不合法");
+                if (!char.IsLetter(ch)) throw new FormatException("Illegal Cypher Text");
             this.cypher_text = cypher_text;
 
             foreach (char ch in md5)
-                if (!char.IsLetterOrDigit(ch)) throw new FormatException("MD5输入不合法");
+                if (!char.IsLetterOrDigit(ch)) throw new FormatException("Illegal MD5");
             this.md5 = this.input_md5 = md5;
         }
 
@@ -86,11 +86,11 @@ namespace EnigmaStimulator
             cypher_text = string.Empty; //清空密文
             //检查是否可以计算
             if (plain_text == "")
-                throw new ArithmeticException("没有输入明文！");
+                throw new ArithmeticException("Please input plain text");
             for (int i = 0; i < 3; i++)
             {
                 if (rotor_num[i] == null || ring_setting == null || message_key[i] == null)
-                    throw new ArithmeticException("Rotor信息不足！");
+                    throw new ArithmeticException("Please input complete rotor");
             }
             md5 = Calculate_MD5(plain_text); //计算md5
 
@@ -108,9 +108,9 @@ namespace EnigmaStimulator
         public string Decrpyt()
         {
             if (cypher_text == "")
-                throw new ArithmeticException("没有输入密文！");
+                throw new ArithmeticException("Please input cypher text");
             if (md5 == "")
-                throw new ArithmeticException("没有输入MD5！");
+                throw new ArithmeticException("Please input MD5");
             plain_text = cypher_text;
             input_md5 = md5;
             if (Recursive_Decrypt(rotor_num, ring_setting, input_message_key, 0))
@@ -118,7 +118,7 @@ namespace EnigmaStimulator
                 return cypher_text;
             }
             else
-                throw new ArithmeticException("无解");
+                throw new ArithmeticException("No Solution");
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace EnigmaStimulator
         private char Through_Plugboard(char input)
         {
             if (input > 'Z' || input < 'A')
-                throw new FormatException("加密/解密过程出错：输入并非字母");
+                throw new FormatException("Code Error, plz contact author");
             return plugboard[input - 'A'];
         }
 
@@ -278,7 +278,7 @@ namespace EnigmaStimulator
         private char Through_Rotor(char input)
         {
             if (input > 'Z' || input < 'A')
-                throw new FormatException("加密/解密过程出错：输入并非字母");
+                throw new FormatException("Code Error, plz contact author");
 
             Adjust_MessageKey();
             for (int i = 2; i >= 0; i--)
@@ -290,7 +290,7 @@ namespace EnigmaStimulator
         private char Through_Rotor_Verse(char input)
         {
             if (input > 'Z' || input < 'A')
-                throw new FormatException("加密/解密过程出错：输入并非字母");
+                throw new FormatException("Code Error, plz contact author");
 
             for (int i = 0; i <= 2; i++)
                 input = Through_Single_Rotor_Verse(input, i);
@@ -301,14 +301,14 @@ namespace EnigmaStimulator
         private char Through_Reflector(char input)
         {
             if (input > 'Z' || input < 'A')
-                throw new FormatException("加密/解密过程出错：输入并非字母");
+                throw new FormatException("Code Error, plz contact author");
             return reflector[input - 'A'];
         }
 
         private char Through_Enigma(char input)
         {
             if (input > 'Z' || input < 'A')
-                throw new FormatException("加密/解密过程出错：输入并非字母");
+                throw new FormatException("Code Error, plz contact author");
             input = Through_Plugboard(input);
             input = Through_Rotor(input);
             input = Through_Reflector(input);

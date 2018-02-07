@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -73,11 +74,17 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.encryptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.decryptDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Plgbd.SuspendLayout();
             this.Rotor.SuspendLayout();
             this.RingSetting.SuspendLayout();
             this.MessageKey.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -134,7 +141,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Sitka Text", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(32, 463);
+            this.label7.Location = new System.Drawing.Point(32, 456);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(67, 35);
             this.label7.TabIndex = 1;
@@ -507,7 +514,7 @@
             this.MD5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.MD5.Font = new System.Drawing.Font("宋体", 22.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.MD5.Location = new System.Drawing.Point(201, 454);
+            this.MD5.Location = new System.Drawing.Point(201, 447);
             this.MD5.Name = "MD5";
             this.MD5.Size = new System.Drawing.Size(727, 50);
             this.MD5.TabIndex = 25;
@@ -541,7 +548,7 @@
             this.CypherText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CypherText.Font = new System.Drawing.Font("宋体", 22.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.CypherText.Location = new System.Drawing.Point(201, 376);
+            this.CypherText.Location = new System.Drawing.Point(201, 377);
             this.CypherText.Name = "CypherText";
             this.CypherText.Size = new System.Drawing.Size(727, 50);
             this.CypherText.TabIndex = 24;
@@ -630,11 +637,50 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Enter += new System.EventHandler(this.groupBox3_Enter);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearCToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.encryptToolStripMenuItem,
+            this.decryptDToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(158, 82);
+            // 
+            // clearCToolStripMenuItem
+            // 
+            this.clearCToolStripMenuItem.Name = "clearCToolStripMenuItem";
+            this.clearCToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
+            this.clearCToolStripMenuItem.Text = "Clear(&C)";
+            this.clearCToolStripMenuItem.Click += new System.EventHandler(this.clearCToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(172, 6);
+            // 
+            // encryptToolStripMenuItem
+            // 
+            this.encryptToolStripMenuItem.Name = "encryptToolStripMenuItem";
+            this.encryptToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
+            this.encryptToolStripMenuItem.Text = "Encrypt(&E)";
+            this.encryptToolStripMenuItem.Click += new System.EventHandler(this.encryptToolStripMenuItem_Click);
+            // 
+            // decryptDToolStripMenuItem
+            // 
+            this.decryptDToolStripMenuItem.Name = "decryptDToolStripMenuItem";
+            this.decryptDToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
+            this.decryptDToolStripMenuItem.Text = "Decrypt&(D)";
+            this.decryptDToolStripMenuItem.Click += new System.EventHandler(this.decryptDToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(953, 607);
+            this.ContextMenuStrip = this.contextMenuStrip1;
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.encrypt_btn);
             this.Controls.Add(this.decrypt_btn);
@@ -656,6 +702,7 @@
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label1);
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Enigma";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -669,6 +716,7 @@
             this.MessageKey.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -719,6 +767,11 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem clearCToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem encryptToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem decryptDToolStripMenuItem;
     }
 }
 
