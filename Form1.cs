@@ -214,10 +214,10 @@ namespace EnigmaStimulator
                     var rotor_num = Get_Rotor();
                     var ring_setting = Get_Ring_Setting();
                     var message_key = Get_Message_Key();
-                    string plain_text = PlainText.Text;
+                    // plain_text = PlainText.Text;
                     string cypher_text = CypherText.Text;
                     string md5 = MD5.Text;
-                    Enigma enigma = new Enigma(plugboard, rotor_num, ring_setting, message_key, plain_text, cypher_text, md5);
+                    Enigma enigma = new Enigma(plugboard, rotor_num, ring_setting, message_key, "", cypher_text, md5);
                     decrypted = enigma.Decrpyt();
                     //显示破译数据
                     this.Invoke(new Action(() =>

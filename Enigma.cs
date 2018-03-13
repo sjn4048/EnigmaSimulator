@@ -13,7 +13,7 @@ namespace EnigmaStimulator
         //Enigma常量
         static readonly string[] rotor_match = new string[] { "EKMFLGDQVZNTOWYHXUSPAIBRCJ", "AJDKSIRUXBLHWTMCQGZNPYFVOE", "BDFHJLCPRTXVZNYEIWGAKMUSQO", "ESOVPZJAYQUIRHXLNFTGKDCMWB", "VZBRGITYUPSDNHLXAWMJQOFECK" };
         static readonly string[] rotor_match_verse = new string[] { "UWYGADFPVZBECKMTHXSLRINQOJ", "AJPCZWRLFBDKOTYUQGENHXMIVS", "TAGBPCSDQEUFVNZHYIXJWLRKOM", "HZWVARTNLGUPXQCEJMBSKDYOIF", "QCYLXWENFTZOSMVJUDKGIARPHB" };
-        static readonly string rotor_trigger = "QEVJZ";
+        static readonly string rotor_trigger = "RFWKA";
         static readonly string reflector = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
 
         //输入/输出变量
@@ -69,7 +69,8 @@ namespace EnigmaStimulator
 
             plain_text = plain_text.Trim();
             foreach (char ch in plain_text)
-                if (!char.IsLetter(ch)) throw new FormatException("Illegal Plain Text");
+                if (!char.IsLetter(ch))
+                    throw new FormatException("Illegal Plain Text");
             this.plain_text = plain_text;
 
             foreach (char ch in cypher_text)
@@ -223,12 +224,12 @@ namespace EnigmaStimulator
         private void Adjust_MessageKey()
         {
             message_key[2] = Get_Next_Character((char)message_key[2]);
-            if (message_key[1] == rotor_trigger[(int)rotor_num[1] - 1])
+            if (message_key[1] == rotor_trigger[(int)rotor_num[1] - 1] - 1)
             {
                 message_key[1] = Get_Next_Character((char)message_key[1]);
                 message_key[0] = Get_Next_Character((char)message_key[0]);
             }
-            else if (message_key[2] == rotor_trigger[(int)rotor_num[2] - 1] + 1)
+            if (message_key[2] == rotor_trigger[(int)rotor_num[2] - 1])
             {
                 message_key[1] = Get_Next_Character((char)message_key[1]);
             }
